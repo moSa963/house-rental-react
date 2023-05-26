@@ -1,9 +1,8 @@
 import React from "react";
-import { useScroll } from "../../contexts/ScrollContext";
-import Text from "../../elements/Text";
+import Text from "../elements/Text";
 
-const AppBanner = ({ src,  }) => {
-    const {scroll} = useScroll();
+const AppBanner = ({ src }) => {
+    const { scroll } = { scroll: 1 };
     const p = scroll > 500 ? 250: scroll /2;
 
     return (

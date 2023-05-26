@@ -1,24 +1,26 @@
 import React from "react";
-import NavButton from "./NavButton";
+import NavBarBase from "./NavBarBase";
+import Link from "next/link";
+import AppIcon from "../AppIcon";
 import {BsList} from "react-icons/bs";
-import { useScreenSize, State } from "../../contexts/ScreenContext";
-import AppIcon from "../../icons/AppIcon";
-import {AiOutlineHome} from "react-icons/ai";
 import {MdNightlight} from "react-icons/md";
 import {MdLightMode} from "react-icons/md";
-import { useTheme } from "../../contexts/ThemeContext";
-import { Link, useNavigate } from "react-router-dom";
-import AuthNavItem from "./AuthNavItem";
+import { State, useScreenSize } from "@/contexts/ScreenContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import NavButton from "./NavButton";
+import ToolsBar from "./ToolsBar";
+import {AiOutlineHome} from "react-icons/ai";
 import {IoMdAdd} from "react-icons/io";
 import {VscListSelection} from "react-icons/vsc";
-import NavBarBase from "./NavBarBase";
-import ToolsBar from "./ToolsBar";
+import { useRouter } from "next/navigation";
+
 
 const NavBar = () => {
     const [collapse, setCollapse] = React.useState(false);
     const { size } = useScreenSize();
     const {theme, toggleTheme} = useTheme();
-    const nav = useNavigate();
+    const router = useRouter();
+
 
     React.useEffect(()=>{
         setCollapse(size !== State.sm);
@@ -26,12 +28,12 @@ const NavBar = () => {
 
     const handleNavigate = (to)=>{
         setCollapse(false);
-        nav(to);
+        router.push(to)
     }
 
     return (
         <NavBarBase>
-            <Link className="h-full flex-grow flex" to="/">
+            <Link className="h-full flex-grow flex" href="/">
                 <AppIcon className="text-blue-500"/>
             </Link>
 
@@ -47,7 +49,6 @@ const NavBar = () => {
                 <NavButton Icon={AiOutlineHome} title="Home" onClick={() => handleNavigate("/")}/>
                 <NavButton Icon={IoMdAdd} title="Host your place" onClick={() => handleNavigate("/house")}/>
                 <NavButton Icon={VscListSelection} title="Houses list" onClick={() => handleNavigate("/house/list")}/>
-                <AuthNavItem nav={(to) => handleNavigate(to)}/>
             </ToolsBar>
         </NavBarBase>
     );

@@ -1,14 +1,11 @@
 import React from "react";
 import Avatar from "../../elements/Avatar";
 import NavButton from "./NavButton";
-import { BiLogIn } from "react-icons/bi";
-import { useAuth } from "../../contexts/AuthContext";
-import { APP_URL } from "../../utils/Request";
 
 const AuthNavItem = ({ nav }) => {
-    const {auth} = useAuth();
+    const { auth } = { auth: { user: { username: "mo.sa" } } }
 
-    if (!auth.user) return <NavButton to="login" Icon={BiLogIn} title="Register"/>;
+    //if (!auth.user) return <NavButton to="login" Icon={BiLogIn} title="Register"/>;
 
     return (
         <NavButton title={auth.user.username} onClick={()=>nav && nav()}>

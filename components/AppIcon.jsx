@@ -1,10 +1,10 @@
 import React from "react";
-import { useScroll } from "../contexts/ScrollContext";
-import { interpolate } from "../utils/Interpolator";
+import { interpolate } from "@/utils/Interpolator";
+import { useScroll } from "@/contexts/ScrollContext";
 
 
 
-const AppIcon = ({ className }) => {
+const AppIcon = () => {
     const {scroll} = useScroll();
 
     return (

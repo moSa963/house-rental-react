@@ -1,5 +1,5 @@
+import { State } from "@/contexts/ScreenContext";
 import React from "react";
-import { State } from "../../contexts/ScreenContext";
 
 
 
