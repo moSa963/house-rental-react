@@ -1,28 +1,27 @@
+"use client"
+import HouseList from "@/components/House/HouseList";
+import Switch from "@/components/elements/Switch";
+import TextInput from "@/components/elements/TextInput";
+import { useAuth } from "@/contexts/AuthContext";
+import request from "@/utils/Request";
+import { useSearchParams } from "next/navigation";
 import React from "react";
-import { useLocation } from "react-router-dom";
-import HouseList from "../components/House/HouseList";
-import { useAuth } from "../contexts/AuthContext";
-import { useRequest } from "../contexts/RequestContext";
-import Switch from "../elements/Switch";
-import TextInput from "../elements/TextInput";
 
 const HousesList = () => {
     const [list, setList] = React.useState([]);
     const [next, setNext] = React.useState(null);
-    const request = useRequest();
     const [data, setData] = React.useState({});
-    const { search } = useLocation();
-    const quary = React.useMemo(() => new URLSearchParams(search), [search]);
     const [processing, setProcessing] = React.useState(false);
-    const { auth } = useAuth();
+    const search = useSearchParams();
+    const { user } = useAuth();
 
     React.useEffect(()=>{
         setData(v => ({
             ...v,
-            country: quary.get("country") || "",
-            city: quary.get("city") || "",
+            country: search.get("country") || "",
+            city: search.get("city")  || "",
         }));
-    }, [quary]);
+    }, [search]);
 
     const handleInput = (key, value) => {
         data[key] = value;
@@ -30,13 +29,13 @@ const HousesList = () => {
     }
 
     React.useEffect(()=>{
-        getList(request, setList, setNext, data, auth, setProcessing);
-    }, [request, data, setProcessing, auth]);
+        getList(setList, setNext, data, user, setProcessing);
+    }, [data, setProcessing, user]);
 
 
     const handleLoadNext = () => {
         if(next && !processing){
-            getNext(request, setList, setNext, next, setProcessing);
+            getNext(setList, setNext, next, setProcessing);
         }
     }
 
@@ -49,20 +48,20 @@ const HousesList = () => {
                 <div className="w-full max-w-none md:max-w-md bg-level2 sticky top-16 rounded-xl shadow-sm p-5 grid grid-cols-1 gap-5">
                     <TextInput title="Country" onInput={(v)=>handleInput("country", v)} value={data?.country} />
                     <TextInput title="City" onInput={(v)=>handleInput("city", v)} value={data?.city}/>
-                    {auth?.user && <Switch title="My Houses" onChange={(v)=>handleInput("mine", v)} value={data?.mine} />}
+                    {user && <Switch title="My Houses" onChange={(v)=>handleInput("mine", v)} value={data?.mine} />}
                 </div>
             </div>
         </div>
     );
 }
 
-const getList = async (request, setList, setNext, data, auth, setProcessing) => {
+const getList = async (setList, setNext, data, user, setProcessing) => {
     setProcessing(true);
 
     var url = "api/house?";
     data?.country && (url += "country=" + data.country + "&");
     data?.city && (url += "city=" + data.city + "&");
-    data?.mine && auth?.user && (url += "username=" + auth.user.username);
+    data?.mine && user && (url += "username=" + auth.user.username);
  
     const res = await request(url);
     
@@ -75,7 +74,7 @@ const getList = async (request, setList, setNext, data, auth, setProcessing) => 
     setProcessing(false);
 }
 
-const getNext = async (request, setList, setNext, next, setProcessing) => {
+const getNext = async (setList, setNext, next, setProcessing) => {
     if (!next) return;
 
     setProcessing(true);
