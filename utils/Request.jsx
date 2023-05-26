@@ -1,23 +1,7 @@
-export const APP_URL = "/"; // "http://127.0.0.1:8000/";
-export const TOKEN = null; // "Bearer 1|6D9jzknk51rxFtE9A0y7GJN1LXr5ta8IrmigawpI";
+import { cookies } from "next/dist/client/components/headers";
 
+export const TOKEN = null; //"Bearer 1|CS8821GgcK5tSCdn9BVxrcN8lYs1EKIBHxz61WzP" ;
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
 
 const getHeader = () => {
     const headers = {
@@ -25,44 +9,44 @@ const getHeader = () => {
     };
 
     TOKEN && (headers['Authorization'] = TOKEN);
-    !TOKEN && (headers['X-XSRF-TOKEN'] = getCookie('XSRF-TOKEN'));
+
+    !TOKEN && (headers['X-XSRF-TOKEN'] = cookies().get('XSRF-TOKEN'));
 
     return headers;
 }
 
-const sendRequest = (url = APP_URL, method = "GET", data = null) => {
+const request = (url, method = "GET", data = null) => {
     var body = {};
 
-    if (data && method !== 'GET') {
-        var form = new FormData();
+    body["headers"] = getHeader();
+    body["method"] = method;
 
-        if (typeof(data) === "object"){
+    if (data && method !== 'GET') {
+        var form = data;
+
+        if (typeof (data) === "object") {
+            form = new FormData();
+
             Object.keys(data).forEach(key => {
-                if (Array.isArray(data[key])){
-                    data[key].forEach(e=>{
+                if (Array.isArray(data[key])) {
+                    data[key].forEach((e) => {
                         form.append(key + "[]", e);
                     });
-                }else {
+                } else {
                     form.append(key, data[key]);
                 }
             });
-        } else {
-            form = data;
         }
 
         body["body"] = form;
     }
 
-    body["headers"] = getHeader();
-    body["method"] = method;
-    body["credentials"] = 'include';
-
     if (!url.match(/^https?:/s)) {
-        url = APP_URL + url;
+        url = process.env.api_url + url;
     }
 
     return fetch(url, body);
 }
 
 
-export default sendRequest;
+export default request;
