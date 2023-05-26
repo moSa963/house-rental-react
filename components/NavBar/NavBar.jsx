@@ -27,11 +27,6 @@ const NavBar = () => {
         setCollapse(size !== State.sm);
     }, [size]);
 
-    const handleNavigate = (to)=>{
-        setCollapse(false);
-        router.push(to)
-    }
-
     return (
         <NavBarBase>
             <Link className="h-full flex-grow flex" href="/">
