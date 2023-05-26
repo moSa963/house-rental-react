@@ -1,17 +1,17 @@
+"use client"
+import ContractItem from "@/components/ContractItem";
+import Avatar from "@/components/elements/Avatar/Avatar";
+import Button from "@/components/elements/Button";
+import Text from "@/components/elements/Text";
+import { useAuth } from "@/contexts/AuthContext";
+import { useScroll } from "@/contexts/ScrollContext";
+import request from "@/utils/Request";
 import React, { useRef } from "react";
-import Avatar from "../elements/Avatar";
-import ContractItem from "../components/ContractItem";
-import { Types, useAuth } from "../contexts/AuthContext";
-import { useRequest } from "../contexts/RequestContext";
-import { useScroll } from "../contexts/ScrollContext";
-import Button from "../elements/Button";
-import Text from "../elements/Text";
-import { APP_URL } from "../utils/Request";
+
 
 const Profile = () => {
-    const {auth, setAuth} = useAuth();
+    const {user, logout} = useAuth();
     const [data, setData] = React.useState({});
-    const request = useRequest();
     const [contracts, setContracts] = React.useState([]);
     const [processing, setProcessing] = React.useState(false);
     const [next, setNext] = React.useState(null);
@@ -23,20 +23,20 @@ const Profile = () => {
     }
 
     React.useEffect(()=>{
-        getContracts(request, setContracts, setNext, setProcessing);
-    }, [request]);
+        getContracts(setContracts, setNext, setProcessing);
+    }, []);
 
     React.useEffect(()=>{
         if (Object.keys(data).length > 0){
-            update(request, data);
+            update(data);
         }
-    }, [data, request]);
+    }, [data]);
 
     React.useEffect(()=>{
         if (listRef.current.getBoundingClientRect().bottom < 600 && next && !processing){
-            getNext(request, next, setContracts, setNext, setProcessing);
+            getNext(next, setContracts, setNext, setProcessing);
         }
-    }, [scroll, next, request, processing]);
+    }, [scroll, next, processing]);
 
     const handleDeleted = (id) => {
         setContracts(contracts.filter(e => e.id !== id));
@@ -45,14 +45,14 @@ const Profile = () => {
     return (
         <div className="w-full grid grid-cols-1 bg-inherit mt-24 max-w-5xl px-2 gap-5">
             <div className="flex">
-                <Avatar size="large" src={data?.image || (APP_URL + `api/user/${auth.user.username}/image`)} onChange={(e) => handleImageInput(e)} />
+                <Avatar size="large" src={data?.image || `${process.env.api_url}api/user/${user?.username}/image`} onChange={(e) => handleImageInput(e)} />
                 <div className="flex-1 ml-2 flex flex-col  justify-center">
-                    <Text>{auth?.user && (auth.user.first_name + " " + auth.user.last_name)}</Text>
-                    <Text>{auth?.user && ("@" + auth?.user.username)}</Text>
+                    <Text>{user && (user.first_name + " " + user.last_name)}</Text>
+                    <Text>{user && ("@" + user.username)}</Text>
                 </div>
             </div>
             <div className="flex h-fit justify-end">
-                <Button value="Logout" color="#ff3333aa" onClick={() => setAuth(Types.LOGOUT)}/>
+                <Button value="Logout" color="#ff3333aa" onClick={logout}/>
             </div>
 
             <div className="w-full grid grid-cols-1 gap-5" ref={listRef}>
@@ -66,11 +66,11 @@ const Profile = () => {
 }
 
 
-const update = async (request, data) => {
+const update = async (data) => {
     await request("api/user", "POST", data);
 }
 
-const getContracts = async (request, setContracts, setNext, setProcessing) => {
+const getContracts = async (setContracts, setNext, setProcessing) => {
     setProcessing(true);
     const res = await request("api/contract");
 
@@ -79,11 +79,11 @@ const getContracts = async (request, setContracts, setNext, setProcessing) => {
         setNext(js.links.next);
         setContracts(js.data);
     }
-    setProcessing(false);
 
+    setProcessing(false);
 }
 
-const getNext = async (request, next, setContracts, setNext, setProcessing) => {
+const getNext = async (next, setContracts, setNext, setProcessing) => {
     setProcessing(true);
 
     const res = await request(next);
@@ -96,4 +96,5 @@ const getNext = async (request, next, setContracts, setNext, setProcessing) => {
 
     setProcessing(false);
 }
+
 export default Profile;
