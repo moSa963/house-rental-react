@@ -1,9 +1,10 @@
+"use client"
+import LoginForm from "@/components/Form/LoginForm";
+import Signin from "@/components/Form/SigninForm";
+import ActionsBar from "@/components/elements/ActionsBar/ActionsBar";
+import ProgressLinear from "@/components/elements/ProgressLinear";
+import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
-import LoginForm from "../components/Form/LoginForm";
-import Signin from "../components/Form/SigninForm";
-import { useAuth, Types } from "../contexts/AuthContext";
-import ActionsBar from "../elements/ActionsBar";
-import ProgressLinear from "../elements/ProgressLinear";
 
 
 const Card = ({ hidden, children }) => {
@@ -17,31 +18,31 @@ const Card = ({ hidden, children }) => {
 }
 
 const Register = () => {
-    const [selected, setSelected] = React.useState(Types.LOGIN);
+    const [selected, setSelected] = React.useState("login");
     const [processing, setProcessing] = React.useState(false);
     const [error, setError] = React.useState(false);
-    const {setAuth} = useAuth();
+    const { login, register } = useAuth();
 
-    const handleSubmit = async (data) => {
+    const handleSubmit = async (f, data) => {
         setProcessing(true);
 
-        await setAuth(selected, data, setError);
+        await f(data, setError);
 
         setProcessing(false);
     }
 
     return (
         <div className="w-full bg-inherit mt-24 max-w-2xl px-2 ">
-            <ActionsBar actions={{Login: Types.LOGIN, Signup: Types.SIGNUP}} onChange={setSelected} value={selected} />
+            <ActionsBar actions={{Login: "login", Signup: "register"}} onChange={setSelected} value={selected} />
             {error && <p>{error}</p>}
             <div className="relative w-full h-[800px] my-9">
-                <Card hidden={selected !== Types.LOGIN}>
+                <Card hidden={selected !== "login"}>
                     <ProgressLinear active={processing}/>
-                    <LoginForm onSubmit={handleSubmit} disabled={processing} />   
+                    <LoginForm onSubmit={(data) => handleSubmit(login, data)} disabled={processing} />   
                 </Card>  
-                <Card hidden={selected !== Types.SIGNUP}>
+                <Card hidden={selected !== "register"}>
                     <ProgressLinear active={processing}/>
-                    <Signin onSubmit={handleSubmit} disabled={processing}/>
+                    <Signin onSubmit={(data) => handleSubmit(register, data)} disabled={processing}/>
                 </Card>
             </div>
         </div>
