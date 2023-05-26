@@ -1,19 +1,18 @@
 import React from "react";
-import { useRequest } from "../contexts/RequestContext";
 import ReviewCard from "./ReviewCard";
+import request from "@/utils/Request";
 
 
 const ReviewContainer = ({ house }) => {
     const [reviews, setReviews] = React.useState(null);
-    const request = useRequest();
     const [next, setNext] = React.useState(null);
     
     React.useEffect(()=>{
-        house?.id && getReviews(request, house.id, setReviews, setNext);
-    }, [house, request]);
+        house?.id && getReviews(house.id, setReviews, setNext);
+    }, [house]);
 
     const handleMore = ()=>{
-        getReviews(request, house.id, setReviews, setNext, next);
+        getReviews(house.id, setReviews, setNext, next);
     }
 
     return (
@@ -32,7 +31,7 @@ const ReviewContainer = ({ house }) => {
 }
 
 
-const getReviews = async (request, house_id, setReviews, setNext, next) => {
+const getReviews = async (house_id, setReviews, setNext, next) => {
     const res = await request(next ? next : `api/house/${house_id}/review/list`);
 
     if (res.ok){
