@@ -15,7 +15,7 @@ const ScrollProvider = ({ children }) => {
  
     return (
         <Context.Provider value={{ scroll, scrollTo }}>
-            <div style={{ width: "100vw", height: "100vh", overflow: "auto", overflowX: "hidden" }} className="bg-level1" onScroll={handleScroll} ref={ref}>
+            <div className="bg-level1 w-screen h-screen overflow-auto overflow-x-hidden" onScroll={handleScroll} ref={ref}>
                 { children }
             </div>
         </Context.Provider>
