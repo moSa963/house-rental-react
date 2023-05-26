@@ -1,32 +1,32 @@
+"use client"
 import React from "react";
-import GalleryCard from "../components/Image/GalleryCard";
-import List from "../elements/List";
-import Paragraph from "../elements/Paragraph";
-import RatingBar from "../elements/RatingBar";
-import ReservationCard from "../components/ReservationCard";
-import ReviewContainer from "../components/ReviewContainer";
-import Text from "../elements/Text";
-import Button from "../elements/Button";
-import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import Switch from "../elements/Switch";
-import { useRequest } from "../contexts/RequestContext";
-import { APP_URL } from "../utils/Request";
-import ReviewInput from "../components/ReviewInput";
+import { useParams } from "next/navigation";
+import Text from "@/components/elements/Text";
+import RatingBar from "@/components/elements/RatingBar";
+import Switch from "@/components/elements/Switch";
+import Link from "next/link";
+import Button from "@/components/elements/Button";
+import GalleryCard from "@/components/Image/GalleryCard";
+import request from "@/utils/Request";
+import List from "@/components/elements/List";
+import ReservationCard from "@/components/ReservationCard";
+import Paragraph from "@/components/elements/Paragraph";
+import ReviewInput from "@/components/ReviewInput";
+import ReviewContainer from "@/components/ReviewContainer";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 const ShowHouse = () => {
     const [house, setHouse] = React.useState({});
     const param = useParams();
-    const { auth } = useAuth();
-    const request = useRequest();
+    const { user } = useAuth();
 
     React.useEffect(()=>{
-        getHouse(request, param.id, setHouse);
-    }, [param.id, request]);
+        getHouse(param.id, setHouse);
+    }, [param.id]);
 
     const handleActiveChanged = ()=>{
-        setActive(request, house, setHouse);
+        setActive(house, setHouse);
     }
 
     return (
@@ -41,11 +41,11 @@ const ShowHouse = () => {
                 <p className="font-mono  mb-3">@{house?.user?.username} . {house?.city},{house?.country}</p>
 
                 {
-                    auth?.user && auth?.user.id === house?.user?.id &&
+                    user && user.id === house?.user?.id &&
                     <React.Fragment>
                         <div className="flex flex-wrap justify-end items-center">
                             <Switch title="Active" value={house?.active} onChange={handleActiveChanged}/>
-                            <Link to="update">
+                            <Link  href={`/house/${param.id}/update`} >
                                 <Button small value="Update" />
                             </Link>
                         </div>
@@ -53,7 +53,7 @@ const ShowHouse = () => {
                 }
 
                 <div className="w-full self-center my-3">
-                    <GalleryCard srcs={house?.images?.map(e => APP_URL + "api/house/" + house?.id + "/image/" + e.id)}/>
+                    <GalleryCard srcs={house?.images?.map(e => `${process.env.api_url}api/house/${house?.id}/image/${e.id}`)}/>
                 </div>
             </div>
 
@@ -94,7 +94,7 @@ const ShowHouse = () => {
     );
 }
 
-const setActive = async (request, house, setHouse)=>{
+const setActive = async (house, setHouse)=>{
     const res = await request("api/house/" + house.id, "POST", {active: !house?.active ? 1 : 0 });
     
     if (res.ok){
@@ -102,7 +102,7 @@ const setActive = async (request, house, setHouse)=>{
     }
 }
 
-export const getHouse = async (request, id, setHouse) => {
+export const getHouse = async (id, setHouse) => {
     const res = await request("api/house/" + id);
     
     if (res.ok){
