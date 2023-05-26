@@ -6,6 +6,7 @@ import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/App/Footer'
 import ScreenProvider from '@/contexts/ScreenContext'
 import ThemeProvider from '@/contexts/ThemeContext'
+import AuthProvider from '@/contexts/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,11 +24,13 @@ export default function RootLayout({ children }) {
                 <ScrollProvider>
                     <ThemeProvider>
                         <ScreenProvider>
-                            <NavBar />
-                            <div className="w-full bg-inherit flex justify-center">
-                                {children}
-                            </div>
-                            <Footer />
+                            <AuthProvider>
+                                <NavBar />
+                                <div className="w-full bg-inherit flex justify-center">
+                                    {children}
+                                </div>
+                                <Footer />
+                            </AuthProvider>
                         </ScreenProvider>
                     </ThemeProvider>
                 </ScrollProvider>
