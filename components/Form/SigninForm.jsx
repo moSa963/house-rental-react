@@ -1,7 +1,7 @@
+import { Validator } from "@/utils/Validator";
 import React from "react";
-import ButtonGradient from "../../elements/ButtonGradient";
-import TextInput from "../../elements/TextInput";
-import { Validator } from "../../utils/Validator";
+import TextInput from "../elements/TextInput";
+import ButtonGradient from "../elements/ButtonGradient";
 
 const validator = new Validator({
     first_name: {min: 3, max: 50},

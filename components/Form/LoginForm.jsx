@@ -1,8 +1,8 @@
+import { Validator } from "@/utils/Validator";
 import React from "react";
-import ButtonGradient from "../../elements/ButtonGradient";
-import Switch from "../../elements/Switch";
-import TextInput from "../../elements/TextInput";
-import {Validator} from "../../utils/Validator"
+import TextInput from "../elements/TextInput";
+import Switch from "../elements/Switch";
+import ButtonGradient from "../elements/ButtonGradient";
 
 const validator = new Validator({
     username: { min: 3, max: 50, match: /^[A-Za-z]+([._-]?[A-Za-z0-9]+)*$/s},
