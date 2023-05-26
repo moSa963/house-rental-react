@@ -1,9 +1,8 @@
 import React from "react";
-import Avatar from "../elements/Avatar";
-import Paragraph from "../elements/Paragraph";
-import RatingBar from "../elements/RatingBar";
-import { APP_URL } from "../utils/Request";
-import Text from "../elements/Text";
+import Avatar from "./elements/Avatar/Avatar";
+import RatingBar from "./elements/RatingBar";
+import Text from "./elements/Text";
+import Paragraph from "./elements/Paragraph";
 
 
 const ReviewCard = ({ review }) => {
@@ -12,7 +11,7 @@ const ReviewCard = ({ review }) => {
     return (
         <div>
             <div className="flex justify-center items-center">
-                <Avatar src={review && APP_URL + review?.user?.image_url}/>
+                <Avatar src={review && process.env.api_url + review?.user?.image_url}/>
                 
                 <div className="flex-1 h-full">
                     <RatingBar rating={review?.rating}/>
