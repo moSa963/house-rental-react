@@ -1,5 +1,5 @@
+import { interpolate } from "@/utils/Interpolator";
 import React from "react";
-import { interpolate } from "../utils/Interpolator";
 
 
 const ButtonGradient = ({ value, onClick, disabled }) => {

@@ -1,6 +1,6 @@
 import React from "react";
-import {BsPlusLg} from "react-icons/bs";
-import {FiMinus} from "react-icons/fi";
+import { BsPlusLg } from "react-icons/bs";
+import { FiMinus } from "react-icons/fi";
 
 
 const Counter = ({ max, min, step=1, value=0.0, onChange, disabled }) =>{
