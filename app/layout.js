@@ -20,8 +20,8 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <ThemeProvider>
-                    <ScrollProvider>
+                <ScrollProvider>
+                    <ThemeProvider>
                         <ScreenProvider>
                             <NavBar />
                             <div className="w-full bg-inherit flex justify-center">
@@ -29,8 +29,8 @@ export default function RootLayout({ children }) {
                             </div>
                             <Footer />
                         </ScreenProvider>
-                    </ScrollProvider>
-                </ThemeProvider>
+                    </ThemeProvider>
+                </ScrollProvider>
             </body>
         </html>
     )
