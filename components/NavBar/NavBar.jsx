@@ -13,6 +13,7 @@ import {AiOutlineHome} from "react-icons/ai";
 import {IoMdAdd} from "react-icons/io";
 import {VscListSelection} from "react-icons/vsc";
 import { useRouter } from "next/navigation";
+import AuthNavItem from "./AuthNavItem";
 
 
 const NavBar = () => {
@@ -46,9 +47,10 @@ const NavBar = () => {
             </div>
 
             <ToolsBar collapse={collapse} size={size}>
-                <NavButton Icon={AiOutlineHome} title="Home" onClick={() => handleNavigate("/")}/>
-                <NavButton Icon={IoMdAdd} title="Host your place" onClick={() => handleNavigate("/house")}/>
-                <NavButton Icon={VscListSelection} title="Houses list" onClick={() => handleNavigate("/house/list")}/>
+                <NavButton Icon={AiOutlineHome} title="Home" href="/" />
+                <NavButton Icon={IoMdAdd} title="Host your place" href="/house" />
+                <NavButton Icon={VscListSelection} title="Houses list" href="/house/list" />
+                <AuthNavItem />
             </ToolsBar>
         </NavBarBase>
     );
