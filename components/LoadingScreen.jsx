@@ -1,5 +1,5 @@
 import React from "react";
-import ProgressCircular from "../elements/ProgressCircular";
+import ProgressCircular from "./elements/ProgressCircular";
 
 
 
@@ -7,7 +7,7 @@ const LoadingScreen = () => {
 
 
     return(
-        <div className="w-full bg-inherit mt-24 max-w-5xl px-2 min-h-screen flex justify-center">
+        <div className="w-full h-full bg-inherit mt-24 max-w-5xl px-2 min-h-screen flex justify-center">
             <ProgressCircular active/>
         </div>
     )
