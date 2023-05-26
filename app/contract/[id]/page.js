@@ -1,24 +1,25 @@
+"use client"
+import PaymentForm from "@/components/Form/PaymentForm";
+import Button from "@/components/elements/Button";
+import ButtonGradient from "@/components/elements/ButtonGradient";
+import Text from "@/components/elements/Text";
+import { useAuth } from "@/contexts/AuthContext";
+import request from "@/utils/Request";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import PaymentForm from "../components/Form/PaymentForm";
-import { useAuth } from "../contexts/AuthContext";
-import { useRequest } from "../contexts/RequestContext";
-import Button from "../elements/Button";
-import ButtonGradient from "../elements/ButtonGradient";
-import Text from "../elements/Text";
 
 const ShowContract = () => {
     const [contract, setContract] = React.useState(null);
     const params = useParams();
-    const request = useRequest();
-    const nav = useNavigate();
-    const { auth } = useAuth();
+    const router = useRouter();
+    const { user } = useAuth();
     const [inputs, setInputs] = React.useState({});
 
-
+    console.log(contract);
     React.useEffect(()=>{
-        getContract(request, params.id, setContract);
-    }, [params.id, request]);
+        getContract(params.id, setContract);
+    }, [params.id]);
 
     const handleInput = (key, value) => {
         inputs[key] = value;
@@ -26,7 +27,7 @@ const ShowContract = () => {
     }
 
     const handleConfirm = () =>{
-        confirm(request, contract.house_id, contract.id, inputs);
+        confirm(contract.house_id, contract.id, inputs);
     }
 
     return (
@@ -36,7 +37,7 @@ const ShowContract = () => {
                     <Text type="h5">{contract?.confirmed ? "Confirmed" : "Awaiting Payment"}</Text>
                 </div>
 
-                <Text type="h4" >House: <Link className="hover:text-slate-700" to={"/house/" + contract?.house_id}>{contract?.house_id}</Link> </Text>
+                <Text type="h4" >House: <Link className="hover:text-slate-700" href={"/house/" + contract?.house_id}>{contract?.house_id}</Link> </Text>
                 <Text type="h4" >Username: {contract?.user.username} </Text>
                 
                 <Text>Check-in: {contract?.start_date}</Text>
@@ -45,14 +46,14 @@ const ShowContract = () => {
             </div>
 
             {
-                !contract?.confirmed && contract?.user_id === auth?.user?.id &&
+                !contract?.confirmed && contract?.user.id === user?.id &&
                 <>
                     <div className="grid grid-cols-1 gap-5 bg-level2 p-4 rounded-lg">
                         <PaymentForm inputs={inputs} onChange={handleInput}/>
                         <ButtonGradient value="Confirm" onClick={handleConfirm}/>
                     </div>
                     <div className="flex justify-end">
-                        <Button value="Delete" color="#ff333399" onClick={()=>deleteContract(request, contract.id, () => nav("/"))}/>
+                        <Button value="Delete" color="#ff333399" onClick={()=>deleteContract(request, contract.id, () => router.push("/"))}/>
                     </div>
                 </>
             }
@@ -61,7 +62,7 @@ const ShowContract = () => {
 }
 
 
-const getContract = async (request, id, setContract) => {
+const getContract = async (id, setContract) => {
     const res = await request("api/contract/" + id);
 
     if (res.ok){
@@ -70,14 +71,14 @@ const getContract = async (request, id, setContract) => {
 }
 
 
-export const deleteContract = async (request, id, onDeleted) => {
+export const deleteContract = async (id, onDeleted) => {
     const res = await request("api/contract/" + id, "DELETE");
     if (res.ok){
         onDeleted&&onDeleted(id);
     }
 }
 
-const confirm = async (request, house_id, id, data) => {
+const confirm = async (house_id, id, data) => {
     const res = await request(`api/house/${house_id}/contract/${id}/confirm`, "POST", data);
     if (res.ok){
         window.location.reload();
