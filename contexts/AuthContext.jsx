@@ -1,4 +1,6 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import request from "@/utils/Request";
+import { usePathname, useRouter } from "next/navigation";
 import React, { createContext } from "react";
 
 const Context = createContext();
@@ -17,24 +19,49 @@ export const Types = {
 }
 
 const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = React.useState({ status: AuthStatus.WAITING, user: null });
+    const [{status, user}, setAuth] = React.useState({ status: AuthStatus.WAITING, user: null });
+    const path = usePathname();
+    const router = useRouter();
 
     React.useEffect(() => {
         getUser(setAuth);
     }, []);
 
+    React.useEffect(() => {
+        if (status === AuthStatus.UNAUTHENTICATED && protected_routes.find(v => path.match(v)))
+        {
+            router.replace("/login");
+        }
+    
+        if (status === AuthStatus.AUTHENTICATED && guest_routes.find(v => path.match(v)))
+        {
+            router.replace("/");
+        }
+    }, [status, path]);
+
     return (
         <Context.Provider value={{
-                user: auth.user, 
-                status: auth.status,
-                login: (data, setErrors) => authRequest("login", data, setErrors, auth, setAuth),
-                register: (data, setErrors) => authRequest("register", data, setErrors, auth, setAuth),
-                logout: (data, setErrors) => authRequest("logout", data, setErrors, auth, setAuth),
+                user, 
+                status,
+                login: (data, setErrors) => authRequest("login", data, setErrors, status, setAuth),
+                register: (data, setErrors) => authRequest("register", data, setErrors, status, setAuth),
+                logout: (data, setErrors) => authRequest("logout", data, setErrors, status, setAuth),
             }}>
-            {children}
+            {status === AuthStatus.WAITING ? <LoadingScreen /> : children}
         </Context.Provider>
     );
 }
+
+const protected_routes = [
+    "profile/*",
+    "contract/*",
+    "house/*/reservation",
+    "house/*/update",
+];
+
+const guest_routes = [
+    "login",
+];
 
 const getUser = async (setAuth) => {
     const res = await request("api/user");
@@ -48,9 +75,9 @@ const getUser = async (setAuth) => {
     setAuth({ status: AuthStatus.UNAUTHENTICATED, user: null });
 }
 
-const authRequest = async (type, data, setErrors, auth, setAuth) => {
+const authRequest = async (type, data, setErrors, status, setAuth) => {
 
-    if (auth.status === AuthStatus.WAITING) return;
+    if (status === AuthStatus.WAITING) return;
 
     const res = await sendRequest(type, "POST", data);
 
