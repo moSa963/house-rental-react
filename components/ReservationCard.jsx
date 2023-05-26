@@ -1,19 +1,18 @@
+import { useRouter } from "next/navigation";
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useRequest } from "../contexts/RequestContext";
-import ButtonGradient from "../elements/ButtonGradient";
-import Counter from "../elements/Counter";
-import Text from "../elements/Text";
-import { getDays } from "../utils/Date";
-import DateInput from "../elements/DateInput";
+import DateInput from "./elements/DateInput";
+import Counter from "./elements/Counter";
+import Text from "./elements/Text";
+import ButtonGradient from "./elements/ButtonGradient";
+import request from "@/utils/Request";
+import { getDays } from "@/utils/Date";
 
 
 const ReservationCard = ({ house }) => {
     const [data, setData] = React.useState({});
     const [available, setAvailable] = React.useState(null);
-    const request = useRequest();
     const [error, setError] = React.useState(null);
-    const nav = useNavigate();
+    const router = useRouter();
 
     const handleInput = (key, value) => {
         setAvailable(null);
@@ -23,10 +22,10 @@ const ReservationCard = ({ house }) => {
 
     const handleClick = ()=>{
         if (available){
-            nav(`/house/${house.id}/reservation?guests=${data["guests"]}&in=${data["start_date"]}&out=${data["end_date"]}`);
+            router.push(`/house/${house.id}/reservation?guests=${data["guests"]}&in=${data["start_date"]}&out=${data["end_date"]}`);
             return;
         }
-        check(request, house?.id, data["start_date"], data["end_date"], setAvailable, setError);
+        check(house?.id, data["start_date"], data["end_date"], setAvailable, setError);
     }
 
     return (
@@ -56,7 +55,7 @@ const ReservationCard = ({ house }) => {
     );
 }
 
-const check = async (request, house_id, start, end, setAvailable, setError)=>{
+const check = async (house_id, start, end, setAvailable, setError)=>{
     setError(null);
     const res = await request(`api/house/${house_id}/check/${start}/${end}`);
 

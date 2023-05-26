@@ -1,5 +1,4 @@
 import React from "react";
-import TextInput from "../../elements/TextInput";
 import {SiVisa} from "react-icons/si";
 import {BsQuestionLg} from "react-icons/bs";
 import {SiAmericanexpress} from "react-icons/si";
@@ -7,6 +6,7 @@ import {FaCcDiscover} from "react-icons/fa";
 import {FaCcDinersClub} from "react-icons/fa";
 import {FaCcMastercard} from "react-icons/fa";
 import {FaCcJcb} from "react-icons/fa";
+import TextInput from "../elements/TextInput";
 
 
 const cardType = [
