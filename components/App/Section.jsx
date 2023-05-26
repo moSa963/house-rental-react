@@ -1,6 +1,7 @@
+"use client"
+import { useScroll } from "@/contexts/ScrollContext";
+import { interpolate } from "@/utils/Interpolator";
 import React from "react";
-import { useScroll } from "../../contexts/ScrollContext";
-import { interpolate } from "../../utils/Interpolator";
 
 
 

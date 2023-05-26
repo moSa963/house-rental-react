@@ -1,8 +1,10 @@
+"use client"
 import React from "react";
+import { useScroll } from "@/contexts/ScrollContext";
 import Text from "../elements/Text";
 
 const AppBanner = ({ src }) => {
-    const { scroll } = { scroll: 1 };
+    const { scroll } = useScroll();
     const p = scroll > 500 ? 250: scroll /2;
 
     return (
