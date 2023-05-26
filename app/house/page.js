@@ -1,12 +1,13 @@
+"use client"
+import ButtonGradient from "@/components/elements/ButtonGradient";
+import Counter from "@/components/elements/Counter";
+import ProgressLinear from "@/components/elements/ProgressLinear";
+import Text from "@/components/elements/Text";
+import TextInput from "@/components/elements/TextInput";
+import request from "@/utils/Request";
+import { Validator } from "@/utils/Validator";
+import { useRouter } from "next/navigation";
 import React from "react";
-import ButtonGradient from "../elements/ButtonGradient";
-import ProgressLinear from "../elements/ProgressLinear";
-import TextInput from "../elements/TextInput";
-import Text from "../elements/Text";
-import Counter from "../elements/Counter";
-import sendRequest from "../utils/Request";
-import { useNavigate } from "react-router-dom";
-import { Validator } from "../utils/Validator";
 
 const validator = new Validator({
     "name": {},
@@ -18,12 +19,11 @@ const validator = new Validator({
     "about": {},
 });
 
-
 const CreateHouse = () => {
     const [inputs, setInputs] = React.useState({lat: 15, lng: 654});
     const [errors, setErrors] = React.useState({});
     const [processing, setProcessing] = React.useState(false);
-    const nav = useNavigate();
+    const router = useRouter();
 
     const handleInput = (key, value)=>{
         inputs[key] = value;
@@ -40,7 +40,7 @@ const CreateHouse = () => {
             return;
         }
         
-        submit(inputs, nav, setProcessing);
+        submit(inputs, router, setProcessing);
     }
 
     return (
@@ -72,14 +72,14 @@ const CreateHouse = () => {
 }
 
 
-const submit = async (inputs, nav, setProcessing) => {
+const submit = async (inputs, router, setProcessing) => {
     setProcessing(true);
 
-    const res = await sendRequest("api/house", "POST", inputs);
+    const res = await request("api/house", "POST", inputs);
 
     if (res.ok){
         const js = await res.json();
-        nav("/house/" + js.data.id + "/update");
+        router.push(`/house/${js.data.id}/update`);
         return;
     }
 
