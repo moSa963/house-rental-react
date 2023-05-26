@@ -5,7 +5,6 @@ import FindPlaceCard from "@/components/FindPlaceCard";
 import Button from "@/components/elements/Button";
 import Text from "@/components/elements/Text";
 import Link from "next/link";
-import { APP_URL } from "@/utils/Request";
 
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
     return (
         <main className="w-full grid grid-cols-1 gap-5">
             
-            <AppBanner src={APP_URL + "images/bannerBackground.jpg"} />
+            <AppBanner src={`${process.env.api_url}images/bannerBackground.jpg`} />
 
             <FindPlaceCard />
             
