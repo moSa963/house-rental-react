@@ -12,7 +12,7 @@ const ThemeProvider = ({ children }) => {
 
     return (
         <Context.Provider value={{theme, toggleTheme}}>
-            <div className={`${theme} h-screen w-screen text-primary border-primary shadow-primary`}>
+            <div className={`${theme} text-primary border-primary shadow-primary`}>
                 {children}
             </div>
         </Context.Provider>
