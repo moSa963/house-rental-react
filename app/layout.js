@@ -24,11 +24,9 @@ export default function RootLayout({ children }) {
                     <ScrollProvider>
                         <ScreenProvider>
                             <NavBar />
-
-                            <div className="h-screen w-screen relative overflow-y-auto overflow-x-hidden">
+                            <div className="w-full bg-inherit flex justify-center">
                                 {children}
                             </div>
-
                             <Footer />
                         </ScreenProvider>
                     </ScrollProvider>
