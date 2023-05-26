@@ -1,26 +1,26 @@
+"use client"
+import UpdateHouseInfoForm from "@/components/Form/UpdateHouseInfoForm";
+import UpdateRoomImagesForm from "@/components/Form/UpdateRoomImagesForm";
+import Button from "@/components/elements/Button";
+import List from "@/components/elements/List";
+import ListInput from "@/components/elements/ListInput";
+import ProgressLinear from "@/components/elements/ProgressLinear";
+import request from "@/utils/Request";
+import { useParams } from "next/navigation";
 import React from "react";
-import ListInput from "../elements/ListInput";
-import Button from "../elements/Button";
-import { getHouse } from "./ShowHouse";
-import { useParams } from "react-router-dom";
-import List from "../elements/List";
 import {MdOutlineRemove} from "react-icons/md";
-import { useRequest } from "../contexts/RequestContext";
-import ProgressLinear from "../elements/ProgressLinear";
-import UpdateRoomImagesForm from "../components/Form/UpdateRoomImagesForm";
-import UpdateHouseInfoForm from "../components/Form/UpdateHouseInfoForm";
+import { getHouse } from "../page";
 
 
 const UpdateHouse = () => {
     const [inputs, setInputs] = React.useState({});
     const [house, setHouse] = React.useState({});
-    const param = useParams();
     const [processing, setProcessing] = React.useState(false);
-    const request = useRequest();
+    const param = useParams();
     
     React.useEffect(()=>{
-        getHouse(request, param.id, setHouse);
-    }, [param.id, request]);
+        getHouse(param.id, setHouse);
+    }, [param.id]);
 
     React.useEffect(()=>{
         house && setInputs({ 
@@ -36,7 +36,7 @@ const UpdateHouse = () => {
     const handleSveNewFeatures = async (data)=>{
         setProcessing(true);
         data.pop();
-        await addFeatures(request, house?.id, {feature: data}, (v)=>{
+        await addFeatures(house?.id, {feature: data}, (v)=>{
             setHouse({...house, features: [...house.features, ...v]});
             inputs["features"] = [];
             setInputs({...inputs});
@@ -47,7 +47,7 @@ const UpdateHouse = () => {
     const handleSveNewRules = async (data)=>{
         setProcessing(true);
         data.pop();
-        await addRules(request, house?.id, {rule: data}, (v)=>{
+        await addRules(house?.id, {rule: data}, (v)=>{
             setHouse({...house, rules: [...house.rules, ...v]});
             inputs["rules"] = [];
             setInputs({...inputs});
@@ -77,7 +77,7 @@ const UpdateHouse = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-5 bg-level2 p-4 rounded-lg">
-                    <List title="Features" list={house?.features?.map(e => e.feature)} actions={[MdOutlineRemove]} onAction={(action, index) => removeFeature(request, house.id, house.features[index].id, handleRemoveFeature)}/>
+                    <List title="Features" list={house?.features?.map(e => e.feature)} actions={[MdOutlineRemove]} onAction={(action, index) => removeFeature(house.id, house.features[index].id, handleRemoveFeature)}/>
                     <ListInput title="New features" value={inputs?.features} onChange={(v)=>setInputs({...inputs, features: v})} />
                     <div className="flex w-full justify-end">
                         <Button value="Save" onClick={()=>handleSveNewFeatures(inputs?.features)} disabled={processing}/>
@@ -85,7 +85,7 @@ const UpdateHouse = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-5 bg-level2 p-4 rounded-lg">
-                    <List title="Rules" list={house?.rules?.map(e => e.rule)} actions={[MdOutlineRemove]} onAction={(action, index) => removeRule(request, house.id, house.rules[index].id, handleRemoveRule)}/>
+                    <List title="Rules" list={house?.rules?.map(e => e.rule)} actions={[MdOutlineRemove]} onAction={(action, index) => removeRule(house.id, house.rules[index].id, handleRemoveRule)}/>
                     <ListInput title="New Rules" value={inputs?.rules} onChange={(v)=>setInputs({...inputs, rules: v})}/>
                     <div className="flex w-full justify-end">
                         <Button value="Save" onClick={()=>handleSveNewRules(inputs?.rules)} disabled={processing}/>
@@ -102,7 +102,7 @@ const UpdateHouse = () => {
 
 
 
-const addFeatures = async (request, house_id, data, onAdded)=>{
+const addFeatures = async (house_id, data, onAdded)=>{
     const res = await request(`api/house/${house_id}/feature`, "POST", data);
     if (res.ok){
         onAdded((await res.json()).data);
@@ -110,21 +110,21 @@ const addFeatures = async (request, house_id, data, onAdded)=>{
     }
 }
 
-const addRules = async (request, house_id, data, onAdded)=>{
+const addRules = async (house_id, data, onAdded)=>{
     const res = await request(`api/house/${house_id}/rule`, "POST", data);
     if (res.ok){
         onAdded((await res.json()).data);
     }
 }
 
-const removeFeature = async (request, house_id, feature_id, onRemove)=>{
+const removeFeature = async (house_id, feature_id, onRemove)=>{
     const res = await request(`api/house/${house_id}/feature/${feature_id}`, "DELETE");
     if (res.ok){
         onRemove(feature_id);
     }
 }
 
-const removeRule = async (request, house_id, rule_id, onRemove)=>{
+const removeRule = async (house_id, rule_id, onRemove)=>{
     const res = await request(`api/house/${house_id}/rule/${rule_id}`, "DELETE");
     if (res.ok){
         onRemove(rule_id);
