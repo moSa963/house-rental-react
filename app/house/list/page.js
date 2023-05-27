@@ -61,7 +61,7 @@ const getList = async (setList, setNext, data, user, setProcessing) => {
     var url = "api/house?";
     data?.country && (url += "country=" + data.country + "&");
     data?.city && (url += "city=" + data.city + "&");
-    data?.mine && user && (url += "username=" + auth.user.username);
+    data?.mine && user && (url += "username=" + user.username);
  
     const res = await request(url);
     
