@@ -1,3 +1,4 @@
+"use client"
 import LoadingScreen from "@/components/LoadingScreen";
 import request from "@/utils/Request";
 import { usePathname, useRouter } from "next/navigation";
