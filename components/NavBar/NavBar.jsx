@@ -3,8 +3,6 @@ import NavBarBase from "./NavBarBase";
 import Link from "next/link";
 import AppIcon from "../AppIcon";
 import {BsList} from "react-icons/bs";
-import {MdNightlight} from "react-icons/md";
-import {MdLightMode} from "react-icons/md";
 import { State, useScreenSize } from "@/contexts/ScreenContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import NavButton from "./NavButton";
@@ -14,14 +12,12 @@ import {IoMdAdd} from "react-icons/io";
 import {VscListSelection} from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import AuthNavItem from "./AuthNavItem";
+import ThemeButton from "./ThemeButton";
 
 
 const NavBar = () => {
     const [collapse, setCollapse] = React.useState(false);
     const { size } = useScreenSize();
-    const {theme, toggleTheme} = useTheme();
-    const router = useRouter();
-
 
     React.useEffect(()=>{
         setCollapse(size !== State.sm);
@@ -33,9 +29,7 @@ const NavBar = () => {
                 <AppIcon className="text-blue-500"/>
             </Link>
 
-            <div className="h-full aspect-square justify-center items-center flex cursor-pointer" onClick={toggleTheme}>
-                {theme === "" ? <MdNightlight className="w-6 h-6"/> : <MdLightMode className="w-6 h-6"/>}
-            </div>
+            <ThemeButton />
 
             <div className="h-full aspect-square justify-center items-center flex sm:hidden cursor-pointer" onClick={() => setCollapse(!collapse)}>
                 <BsList className="w-6 h-6"/>
