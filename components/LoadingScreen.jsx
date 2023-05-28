@@ -7,7 +7,7 @@ const LoadingScreen = () => {
 
 
     return(
-        <div className="w-full h-full bg-inherit mt-24 max-w-5xl px-2 min-h-screen flex justify-center">
+        <div className="w-full h-full flex justify-center items-center">
             <ProgressCircular active/>
         </div>
     )
