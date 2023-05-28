@@ -20,8 +20,8 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <ScrollProvider>
-                    <ThemeProvider>
+                <ThemeProvider>
+                    <ScrollProvider>
                         <ScreenProvider>
                             <AuthProvider>
                                 <NavBar />
@@ -31,8 +31,8 @@ export default function RootLayout({ children }) {
                                 <Footer />
                             </AuthProvider>
                         </ScreenProvider>
-                    </ThemeProvider>
-                </ScrollProvider>
+                    </ScrollProvider>
+                </ThemeProvider>
             </body>
         </html>
     )
