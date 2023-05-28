@@ -24,7 +24,7 @@ const UpdateRoomImagesForm = ({ processing, setProcessing, house, setHouse }) =>
 
     return (
         <div className="bg-level2 p-2 rounded-lg">
-            <ImageInput srcs={house?.images?.map(e => `${process.env.api_url}api/house/${house?.id}/image/${e.id}` +  + "/image/" + )} onChange={setNewImages} onDelete={handleRemoveImage} disabled={processing}/>
+            <ImageInput srcs={house?.images?.map(e => `${process.env.api_url}api/house/${house?.id}/image/${e.id}`)} onChange={setNewImages} onDelete={handleRemoveImage} disabled={processing}/>
             <div className="flex w-full justify-end">
                 <Button value="Save" onClick={handleSaveImages} disabled={processing}/>
             </div>
