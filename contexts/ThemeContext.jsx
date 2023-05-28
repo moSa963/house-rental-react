@@ -6,9 +6,18 @@ const Context = createContext();
 const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = React.useState("dark");
 
-    const toggleTheme = React.useCallback(() => {
-        setTheme(t => t === "dark" ? "light" : "dark");
+    React.useEffect(() => {
+        setTheme(localStorage.getItem("theme") === "dark" ? "dark" : "light");
     }, []);
+
+    const toggleTheme = React.useCallback(() => {
+        setTheme(t => {
+            const newTheme = t === "dark" ? "light" : "dark";
+            localStorage.setItem("theme", newTheme);
+            return newTheme;
+        });    
+    }, []);
+    
 
     return (
         <Context.Provider value={{theme, toggleTheme}}>
