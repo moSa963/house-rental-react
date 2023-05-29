@@ -19,7 +19,7 @@ const Profile = () => {
     const {scroll} = useScroll();
 
     const handleImageInput = async (e) => {
-        setData({ ...data, image: URL.createObjectURL(e[0]) });
+        setData({ ...data, image: e[0], imageUrl: URL.createObjectURL(e[0])  });
     }
 
     React.useEffect(()=>{
@@ -45,7 +45,7 @@ const Profile = () => {
     return (
         <div className="w-full grid grid-cols-1 bg-inherit mt-24 max-w-5xl px-2 gap-5">
             <div className="flex">
-                <Avatar size="large" src={data?.image || `${process.env.api_url}api/user/${user?.username}/image`} onChange={(e) => handleImageInput(e)} />
+                <Avatar size="large" src={data?.imageUrl || `${process.env.api_url}api/user/${user?.username}/image`} onChange={(e) => handleImageInput(e)} />
                 <div className="flex-1 ml-2 flex flex-col  justify-center">
                     <Text>{user && (user.first_name + " " + user.last_name)}</Text>
                     <Text>{user && ("@" + user.username)}</Text>
