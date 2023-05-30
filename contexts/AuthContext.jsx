@@ -80,7 +80,7 @@ const authRequest = async (type, data, setErrors, status, setAuth) => {
 
     if (status === AuthStatus.WAITING) return;
 
-    const res = await sendRequest(type, "POST", data);
+    const res = await request(type, "POST", data);
 
     switch (type) {
         case "login": 
